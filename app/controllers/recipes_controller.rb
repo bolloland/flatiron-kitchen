@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
-    before_action :set_recipe, only:[:edit, :show, :update, :delete]
+    before_action :set_recipe, only:[:new, :edit, :show, :create, :update, :delete]
+    before_action :set_ingredients, only:[:new, :edit, :show, :create, :update, :delete]
 
     def index
         @recipes = Recipe.all
@@ -15,7 +16,7 @@ class RecipesController < ApplicationController
 
 
     def create
-        binding.pry
+        # binding.pry
         @recipe = Recipe.new(recipe_params)
         if @recipe.save
             redirect_to recipe_path(@recipe)
@@ -31,7 +32,11 @@ class RecipesController < ApplicationController
         # binding.pry
         @recipe.update(recipe_params)
         # @recipe.update(name: params[:recipe][:name], ingredients: params[:recipe][:ingredient_ids][])
-        redirect_to recipe_path(@recipe) #show page
+        if @recipe.save
+            redirect_to recipe_path(@recipe) #show page
+        else 
+            render :edit
+        end
     end
 
     def delete
@@ -47,6 +52,9 @@ class RecipesController < ApplicationController
         @recipe = Recipe.find_by_id(params[:id])
     end
 
+    def set_ingredients
+        @ingredients = Ingredient.all
+    end
 
 
 end
